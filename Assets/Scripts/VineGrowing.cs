@@ -7,13 +7,13 @@ public class VineGrowing : MonoBehaviour
 {
     [SerializeField] GameObject vinePrefab;
     [SerializeField] GameObject nodePrefab;
+    
     [SerializeField] float growTime = 0.25f;
     GameObject vineGrowerPrefab;
     Vector2Int activeVinePosition;
     Material activeVineMaterial;
     static HashSet<Vector2Int> vinePositions = new HashSet<Vector2Int>();
     static GameObject[,] vineGrid;
-    static List<GameObject> vines = new List<GameObject>();
 
     float elapsedTime = float.MaxValue;
     bool vineStopped = false;

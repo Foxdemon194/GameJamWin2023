@@ -7,30 +7,35 @@ public class VineGrowing : MonoBehaviour
 {
     [SerializeField] GameObject vinePrefab;
     [SerializeField] GameObject nodePrefab;
-    
     [SerializeField] float growTime = 0.25f;
+    
     GameObject vineGrowerPrefab;
     Vector2Int activeVinePosition;
     Material activeVineMaterial;
     static HashSet<Vector2Int> vinePositions = new HashSet<Vector2Int>();
+    static HashSet<Vector2Int> nodePositions = new HashSet<Vector2Int>();
+    public static bool ContainsNode(Vector2Int node) => nodePositions.Contains(node);
+    public static void ResetVariables() { vinePositions.Clear(); nodePositions.Clear(); vineGrid = new GameObject[GridManager.GridSize.x, GridManager.GridSize.y]; isDead = false; }
     static GameObject[,] vineGrid;
-
+    static bool isDead = false;
+    public static bool IsDead => isDead;
+    public static int VineCount => vinePositions.Count;
     float elapsedTime = float.MaxValue;
     bool vineStopped = false;
     bool newVineSpawned = false;
 
+    public static void KillPlant() => isDead = true;
     void Awake()
     {
-        vineGrid = new GameObject[GridManager.GridSize.x, GridManager.GridSize.y];
         vineGrowerPrefab = Resources.Load<GameObject>("Prefabs/VineGrower");
         activeVinePosition = GridManager.GetGridPosition(transform.position);
     }
     
     void Update()
     {
-        if(!vineStopped)
+        if(!vineStopped && !isDead)
             GrowVine();
-        else if (!newVineSpawned)
+        else if (!newVineSpawned && !isDead)
             SpawnNewVine();
     }
 
@@ -43,27 +48,28 @@ public class VineGrowing : MonoBehaviour
                 activeVineMaterial.SetFloat("_Fill", 1);
             }
 
+            while (FoodManager.FoodIsAdjacent(activeVinePosition, out Vector2Int foodPos))
+            {
+                vineStopped = true;
+                FoodManager.OccupyFood(foodPos);
+                nodePositions.Add(foodPos);
+                Instantiate(nodePrefab, GridManager.GetWorldPosition(foodPos) + new Vector3(0, 0, -0.1f), Quaternion.identity).transform.parent = transform;
+            }
+
+            if (vineStopped) return;
+            
             Vector2Int selectedFood = FoodManager.GetClosestFoodFromNeighbor(activeVinePosition, out int directionIndex);
             
             if (directionIndex == -1) return;
             
             Vector2Int newVinePosition = activeVinePosition + GridManager.directions[directionIndex];
             vinePositions.Add(newVinePosition);
-
-            if (newVinePosition == selectedFood)
-            {
-                vineStopped = true;
-                FoodManager.OccupyFood(selectedFood);
-                Instantiate(nodePrefab, GridManager.GetWorldPosition(selectedFood) + new Vector3(0,0,-0.1f), Quaternion.identity);
-                return;
-            }
-            
             
             vinePositions.Add(activeVinePosition = newVinePosition);
             Quaternion rotation = Quaternion.Euler(0, 0, Mathf.Atan2(GridManager.directions[directionIndex].y, GridManager.directions[directionIndex].x) * Mathf.Rad2Deg);
-            vineGrid[newVinePosition.x, newVinePosition.y] = Instantiate(vinePrefab, GridManager.GetWorldPosition(newVinePosition), rotation);
+            (vineGrid[newVinePosition.x, newVinePosition.y] = Instantiate(vinePrefab, GridManager.GetWorldPosition(newVinePosition), rotation)).transform.parent = transform;
             activeVineMaterial = vineGrid[activeVinePosition.x, activeVinePosition.y].GetComponent<Renderer>().material;
-
+            
 
             elapsedTime = 0;
         }
@@ -95,7 +101,7 @@ public class VineGrowing : MonoBehaviour
             }
         }
         if (!found) return;
-        Instantiate(vineGrowerPrefab, GridManager.GetWorldPosition(selectedSegment), Quaternion.identity);
+        Instantiate(vineGrowerPrefab, GridManager.GetWorldPosition(selectedSegment), Quaternion.identity).transform.parent = transform.parent;
         newVineSpawned = true;
     }
 }

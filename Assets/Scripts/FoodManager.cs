@@ -4,13 +4,91 @@ using UnityEngine;
 
 public class FoodManager : MonoBehaviour
 {
-    [SerializeField] GameObject foodPrefab;
+    [SerializeField] Nutrient foodPrefab;
+    [SerializeField] float diminishingFoodValue = 0.9f;
+    [SerializeField] int baseNutrients = 10;
+    [SerializeField] float attritionFactor = 1;
     [SerializeField] LayerMask obstacles;
-    static List<Vector2Int> foodPositions = new List<Vector2Int>();
-    static GameObject[,] foodGrid;
-    static bool[,] foodOccupiedGrid;
 
-    public static void OccupyFood(Vector2Int foodPosition) => foodOccupiedGrid[foodPosition.x, foodPosition.y] = true;
+    [SerializeField] Vector3Int nutCount;
+    static int BaseNutrients { get => instance.baseNutrients; set => instance.baseNutrients = value; }
+    static float AttritionFactor => instance.attritionFactor;
+    static float DiminishingFoodValue => instance.diminishingFoodValue;
+    static List<Vector2Int> nutrientPositions = new List<Vector2Int>();
+    static Nutrient[,] nutrientGrid;
+    static bool[,] nutrientOccupiedGrid;
+    static int foodOccupied = 0;
+    static int waterOccupied = 0;
+    static int lightOccupied = 0;
+
+    public static void HandleDeath()
+    {
+        foodOccupied = 0; waterOccupied = 0; lightOccupied = 0;
+        BaseNutrients--;
+        if (BaseNutrients <= 0)
+        {
+            Debug.Log("Game Over");
+            return;
+        }
+        foreach (Vector2Int nutrientPosition in nutrientPositions)
+        {
+            if (nutrientOccupiedGrid[nutrientPosition.x, nutrientPosition.y])
+            {
+                nutrientGrid[nutrientPosition.x, nutrientPosition.y].NutrientValue--;
+               
+            }
+            nutrientOccupiedGrid[nutrientPosition.x, nutrientPosition.y] = false;
+        }
+    }
+    public static int Nutrients => (int)(NutrientValue() * AttritionFactor) + instance.baseNutrients;
+    static float FoodValue()
+    {
+        int minResource = Mathf.Min(foodOccupied, waterOccupied, lightOccupied);
+        int foodOver = foodOccupied - minResource;
+
+        return minResource + foodOver * Mathf.Pow(DiminishingFoodValue, foodOver);
+    }
+    static float WaterValue()
+    {
+        int minResource = Mathf.Min(foodOccupied, waterOccupied, lightOccupied);
+        int waterOver = waterOccupied - minResource;
+
+        return minResource + waterOver * Mathf.Pow(DiminishingFoodValue, waterOver);
+    }
+    static float LightValue()
+    {
+        int minResource = Mathf.Min(foodOccupied, waterOccupied, lightOccupied);
+        int lightOver = lightOccupied - minResource;
+
+        return minResource + lightOver * Mathf.Pow(DiminishingFoodValue, lightOver);
+    }
+    static float NutrientValue()
+    {
+        return FoodValue() + WaterValue() + LightValue();
+    }
+
+    public static void OccupyFood(Vector2Int foodPosition) 
+    { 
+        nutrientOccupiedGrid[foodPosition.x, foodPosition.y] = true;
+        switch (nutrientGrid[foodPosition.x, foodPosition.y].NutrientType)
+        {
+            case NutrientType.Food:
+                foodOccupied += nutrientGrid[foodPosition.x, foodPosition.y].NutrientValue;
+                break;
+            case NutrientType.Water:
+                waterOccupied += nutrientGrid[foodPosition.x, foodPosition.y].NutrientValue;
+                break;
+            case NutrientType.Light:
+                lightOccupied += nutrientGrid[foodPosition.x, foodPosition.y].NutrientValue;
+                break;
+            default:
+                int amount = nutrientGrid[foodPosition.x, foodPosition.y].NutrientValue;
+                foodOccupied += amount;
+                waterOccupied += amount;
+                lightOccupied += amount;
+                break;
+        }
+    }
     static LayerMask Obstacles => instance.obstacles;
 
     static FoodManager instance;
@@ -24,8 +102,9 @@ public class FoodManager : MonoBehaviour
         }
         instance = this;
 
-        foodGrid = new GameObject[GridManager.GridSize.x, GridManager.GridSize.y];
-        foodOccupiedGrid = new bool[GridManager.GridSize.x, GridManager.GridSize.y];
+        nutrientGrid = new Nutrient[GridManager.GridSize.x, GridManager.GridSize.y];
+        nutrientOccupiedGrid = new bool[GridManager.GridSize.x, GridManager.GridSize.y];
+        InitializeNutrients();
     }
 
     void Update()
@@ -33,35 +112,77 @@ public class FoodManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector2Int gridPosition = GridManager.GetGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            if (foodGrid[gridPosition.x, gridPosition.y] == null)
+            if (nutrientGrid[gridPosition.x, gridPosition.y] == null)
             {
-                foodGrid[gridPosition.x, gridPosition.y] = Instantiate(foodPrefab, GridManager.GetWorldPosition(gridPosition), Quaternion.identity);
-                foodPositions.Add(gridPosition);
+                nutrientGrid[gridPosition.x, gridPosition.y] = Instantiate<Nutrient>(foodPrefab, GridManager.GetWorldPosition(gridPosition), Quaternion.identity);
+                nutrientPositions.Add(gridPosition);
             }
         }
+        nutCount = new Vector3Int(foodOccupied, waterOccupied, lightOccupied);
     }
 
     public static Vector2Int GetClosestFoodFromNeighbor(Vector2Int gridPosition, out int directionIndex)
     {
         Vector2Int closestFood = gridPosition;
-        float distance = float.MaxValue;
+        float cost = float.MaxValue;
         directionIndex = -1;
-        for (int i = 0; i < foodPositions.Count; i++)
+        for (int i = 0; i < nutrientPositions.Count; i++)
         {
-            if (foodOccupiedGrid[foodPositions[i].x, foodPositions[i].y]) continue;
+            if (nutrientOccupiedGrid[nutrientPositions[i].x, nutrientPositions[i].y]) continue;
             for (int j = 0; j < GridManager.directions.Length; j++)
             {
-                if (Physics2D.Linecast(GridManager.GetWorldPosition(gridPosition + GridManager.directions[j]), GridManager.GetWorldPosition(foodPositions[i]), Obstacles))
+                if (Physics2D.Linecast(GridManager.GetWorldPosition(gridPosition + GridManager.directions[j]), GridManager.GetWorldPosition(nutrientPositions[i]), Obstacles))
                     continue;
-                float newDistance = Vector2Int.Distance(gridPosition + GridManager.directions[j], foodPositions[i]);
-                if (distance > newDistance)
+                if (nutrientGrid[(gridPosition + GridManager.directions[j]).x, (gridPosition + GridManager.directions[j]).y] != null) continue;
+                float nutrientValue;
+                switch (nutrientGrid[nutrientPositions[i].x, nutrientPositions[i].y].NutrientType)
                 {
-                    distance = newDistance;
-                    closestFood = foodPositions[i];
+                    case NutrientType.Food:
+                        nutrientValue = foodOccupied;
+                        break;
+                    case NutrientType.Water:
+                        nutrientValue = waterOccupied;
+                        break;
+                    case NutrientType.Light:
+                        nutrientValue = lightOccupied;
+                        break;
+                    default:
+                        nutrientValue = 0;
+                        break;
+                }
+                float newCost = Vector2Int.Distance(gridPosition + GridManager.directions[j], nutrientPositions[i]) + nutrientValue;
+                if (cost > newCost)
+                {
+                    cost = newCost;
+                    closestFood = nutrientPositions[i];
                     directionIndex = j;
                 }
             }
         }
         return closestFood;
+    }
+
+    public static bool FoodIsAdjacent(Vector2Int gridPos, out Vector2Int foodPos)
+    {
+        foodPos = Vector2Int.zero;
+        for (int i = 0; i < GridManager.directions.Length; i++)
+        {
+            if (nutrientGrid[gridPos.x + GridManager.directions[i].x, gridPos.y + GridManager.directions[i].y] != null && 
+                !nutrientOccupiedGrid[gridPos.x + GridManager.directions[i].x, gridPos.y + GridManager.directions[i].y])
+            {
+                foodPos = gridPos + GridManager.directions[i];
+                return true;
+            }
+        }
+        return false;
+    }
+    void InitializeNutrients()
+    {
+        Nutrient[] nutrients = FindObjectsOfType<Nutrient>();
+        foreach (Nutrient nutrient in nutrients)
+        {
+            nutrientPositions.Add(GridManager.GetGridPosition(nutrient.transform.position));
+            nutrientGrid[GridManager.GetGridPosition(nutrient.transform.position).x, GridManager.GetGridPosition(nutrient.transform.position).y] = nutrient;
+        }
     }
 }

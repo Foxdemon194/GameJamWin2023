@@ -46,4 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vinePrefab: {fileID: 6543586325830537836, guid: f8d58dad38eca87439b01a67f8f874ac, type: 3}
   nodePrefab: {fileID: 7874395366813905726, guid: 91a6acc5342094847aa73fc2a9493aed, type: 3}
-  growTime: 0.25
+  growTime: 0.5

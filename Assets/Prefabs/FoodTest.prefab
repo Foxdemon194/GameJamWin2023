@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nutrientType: 3
-  nutrientValue: 5
+  nutrientValue: 3
 --- !u!61 &4176524401899843983
 BoxCollider2D:
   m_ObjectHideFlags: 0

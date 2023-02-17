@@ -18,6 +18,7 @@ public class VineGrowing : MonoBehaviour
     public static void ResetVariables() { vinePositions.Clear(); nodePositions.Clear(); vineGrid = new GameObject[GridManager.GridSize.x, GridManager.GridSize.y]; isDead = false; }
     static GameObject[,] vineGrid;
     static bool isDead = false;
+    public static bool NoNodes => nodePositions.Count == 0;
     public static bool IsDead => isDead;
     public static int VineCount => vinePositions.Count;
     float elapsedTime = float.MaxValue;
@@ -66,7 +67,7 @@ public class VineGrowing : MonoBehaviour
             vinePositions.Add(newVinePosition);
             
             vinePositions.Add(activeVinePosition = newVinePosition);
-            Quaternion rotation = Quaternion.Euler(0, 0, Mathf.Atan2(GridManager.directions[directionIndex].y, GridManager.directions[directionIndex].x) * Mathf.Rad2Deg);
+            Quaternion rotation = Quaternion.Euler(0, 0, Mathf.Atan2(GridManager.directions[directionIndex].y, GridManager.directions[directionIndex].x) * Mathf.Rad2Deg -90);
             (vineGrid[newVinePosition.x, newVinePosition.y] = Instantiate(vinePrefab, GridManager.GetWorldPosition(newVinePosition), rotation)).transform.parent = transform;
             activeVineMaterial = vineGrid[activeVinePosition.x, activeVinePosition.y].GetComponent<Renderer>().material;
             

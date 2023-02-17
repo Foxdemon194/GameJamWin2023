@@ -27,6 +27,7 @@ public class FoodManager : MonoBehaviour
         BaseNutrients--;
         if (BaseNutrients <= 0)
         {
+            PlantManager.GameOver = true;
             Debug.Log("Game Over");
             return;
         }

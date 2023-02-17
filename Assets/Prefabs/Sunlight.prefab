@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nutrientType: 2
-  nutrientValue: 10
+  nutrientValue: 5
 --- !u!50 &2140212514161673061
 Rigidbody2D:
   serializedVersion: 4

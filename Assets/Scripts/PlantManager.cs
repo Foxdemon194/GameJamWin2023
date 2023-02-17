@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlantManager : MonoBehaviour
 {
     static GameObject plantPrefab;
+    public static bool GameOver { get; set; }
     private void Awake()
     {
         plantPrefab = Resources.Load<GameObject>("Prefabs/PlantOrigin");
@@ -14,9 +15,14 @@ public class PlantManager : MonoBehaviour
     {
         if (FoodManager.Nutrients < VineGrowing.VineCount)
         {
+            if (VineGrowing.NoNodes)
+            {
+                Debug.Log("Game Over");
+                GameOver = true;
+            }
             VineGrowing.KillPlant();
         }
-        if (VineGrowing.IsDead && Input.GetMouseButtonDown(0))
+        if (VineGrowing.IsDead && Input.GetMouseButtonDown(0) && !GameOver)
         {
             Vector2Int mousePosition = GridManager.GetGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             if (VineGrowing.ContainsNode(mousePosition))
@@ -24,6 +30,7 @@ public class PlantManager : MonoBehaviour
                 FoodManager.HandleDeath();
                 Instantiate(plantPrefab, GridManager.GetWorldPosition(mousePosition), Quaternion.identity);
                 FoodManager.OccupyFood(mousePosition);
+                
                 Destroy(gameObject);
             }
                 

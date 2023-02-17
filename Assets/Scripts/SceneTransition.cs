@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class SceneTransition : MonoBehaviour
 {
+    [SerializeField] GameObject pauseMenu;
+
     public void LoadLevel1()
     {
         SceneManager.LoadScene("Level1");
@@ -13,5 +15,16 @@ public class SceneTransition : MonoBehaviour
     public void LoadSettingsMenu()
     {
         SceneManager.LoadScene("SettingsScene");
+    }
+
+    public void ReloadLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void Unpause()
+    {
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
     }
 }

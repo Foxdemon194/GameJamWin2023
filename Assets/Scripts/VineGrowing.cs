@@ -6,6 +6,7 @@ using UnityEngine;
 public class VineGrowing : MonoBehaviour
 {
     [SerializeField] GameObject vinePrefab;
+    [SerializeField] GameObject vineLPrefab;
     [SerializeField] GameObject nodePrefab;
     [SerializeField] float growTime = 0.25f;
     
@@ -24,7 +25,7 @@ public class VineGrowing : MonoBehaviour
     float elapsedTime = float.MaxValue;
     bool vineStopped = false;
     bool newVineSpawned = false;
-
+    int nextDirection = -1;
     public static void KillPlant() => isDead = true;
     void Awake()
     {
@@ -42,13 +43,17 @@ public class VineGrowing : MonoBehaviour
 
     private void GrowVine()
     {
-        if (elapsedTime > growTime)
+        if (nextDirection == -1)
+        {
+            FoodManager.GetClosestFoodFromNeighbor(activeVinePosition, out nextDirection);
+        }
+        if (elapsedTime > growTime && nextDirection != -1)
         {
             if (activeVineMaterial != null)
             {
                 activeVineMaterial.SetFloat("_Fill", 1);
             }
-
+            
             while (FoodManager.FoodIsAdjacent(activeVinePosition, out Vector2Int foodPos))
             {
                 vineStopped = true;
@@ -58,20 +63,44 @@ public class VineGrowing : MonoBehaviour
             }
 
             if (vineStopped) return;
-            
-            Vector2Int selectedFood = FoodManager.GetClosestFoodFromNeighbor(activeVinePosition, out int directionIndex);
-            
-            if (directionIndex == -1) return;
-            
-            Vector2Int newVinePosition = activeVinePosition + GridManager.directions[directionIndex];
-            vinePositions.Add(newVinePosition);
-            
-            vinePositions.Add(activeVinePosition = newVinePosition);
-            Quaternion rotation = Quaternion.Euler(0, 0, Mathf.Atan2(GridManager.directions[directionIndex].y, GridManager.directions[directionIndex].x) * Mathf.Rad2Deg -90);
-            (vineGrid[newVinePosition.x, newVinePosition.y] = Instantiate(vinePrefab, GridManager.GetWorldPosition(newVinePosition), rotation)).transform.parent = transform;
-            activeVineMaterial = vineGrid[activeVinePosition.x, activeVinePosition.y].GetComponent<Renderer>().material;
-            
+            int currentDirection = nextDirection;
+            FoodManager.GetClosestFoodFromNeighbor(activeVinePosition, out nextDirection);
 
+            Vector2Int newVinePosition = activeVinePosition + GridManager.directions[currentDirection];
+            vinePositions.Add(newVinePosition);
+            GameObject selectedPrefab;
+            bool clockwise;
+            float rotationOffset = -90;
+            VineType vineType;
+            if ((currentDirection == 0 && nextDirection == 1) || (currentDirection == 1 && nextDirection == 2) || (currentDirection == 2 && nextDirection == 3) || (currentDirection == 3 && nextDirection == 0))
+            {
+                selectedPrefab = vineLPrefab;
+                clockwise = false;
+                rotationOffset = -180;
+                vineType = VineType.LCounter;
+            }
+            else if ((currentDirection == 0 && nextDirection == 3) || (currentDirection == 3 && nextDirection == 2) || (currentDirection == 2 && nextDirection == 1) || (currentDirection == 1 && nextDirection == 0))
+            {
+                selectedPrefab = vineLPrefab; 
+                clockwise = true;
+                vineType = VineType.LClock;
+            }
+            else
+            {
+                selectedPrefab = vinePrefab;
+                clockwise = false;
+                vineType = VineType.Straight;
+            }
+                vinePositions.Add(activeVinePosition = newVinePosition);
+            Quaternion rotation = Quaternion.Euler(0, 0, Mathf.Atan2(GridManager.directions[currentDirection].y, GridManager.directions[currentDirection].x) * Mathf.Rad2Deg + rotationOffset);
+            (vineGrid[newVinePosition.x, newVinePosition.y] = Instantiate(selectedPrefab, GridManager.GetWorldPosition(newVinePosition), rotation)).transform.parent = transform;
+            activeVineMaterial = vineGrid[activeVinePosition.x, activeVinePosition.y].GetComponent<Renderer>().material;
+            activeVineMaterial.SetInt("_Clockwise", clockwise ? 1 : 0);
+            VineSegment segment = vineGrid[activeVinePosition.x, activeVinePosition.y].GetComponent<VineSegment>();
+
+            segment.inputDirection = (currentDirection + 2) % 4;
+            segment.vineType = vineType;
+            
             elapsedTime = 0;
         }
         else
@@ -88,6 +117,7 @@ public class VineGrowing : MonoBehaviour
     {
         float distance = float.MaxValue;
         Vector2Int selectedSegment = Vector2Int.zero;
+        int selectedDirection = -1;
         bool found = false;
         foreach (Vector2Int position in vinePositions)
         {
@@ -99,10 +129,13 @@ public class VineGrowing : MonoBehaviour
             {
                 distance = newDistance;
                 selectedSegment = position;
+                selectedDirection = directionIndex;
             }
         }
         if (!found) return;
         Instantiate(vineGrowerPrefab, GridManager.GetWorldPosition(selectedSegment), Quaternion.identity).transform.parent = transform.parent;
+        vineGrid[selectedSegment.x, selectedSegment.y].GetComponent<VineSegment>().ExtendVine(selectedDirection, out GameObject newSegment);
+        if (newSegment != null) vineGrid[selectedSegment.x, selectedSegment.y] = newSegment;
         newVineSpawned = true;
     }
 }

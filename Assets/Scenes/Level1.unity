@@ -750,7 +750,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 110259774}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.5, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -938,6 +938,14 @@ PrefabInstance:
     - target: {fileID: 4735859052233825704, guid: d276bab9fb1313143807c327336a64fb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5017244090767771669, guid: d276bab9fb1313143807c327336a64fb, type: 3}
+      propertyPath: m_TileAnchor.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5017244090767771669, guid: d276bab9fb1313143807c327336a64fb, type: 3}
+      propertyPath: m_TileAnchor.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8942870544316256330, guid: d276bab9fb1313143807c327336a64fb, type: 3}
       propertyPath: m_Name
@@ -2900,6 +2908,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3604402057088771332, guid: 2e6c85bff3b3f0d409333f88fcbe5013, type: 3}
+      propertyPath: nextScene
+      value: Level2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3604402057088771332, guid: 2e6c85bff3b3f0d409333f88fcbe5013, type: 3}
+      propertyPath: showObstacles
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3604402057088771333, guid: 2e6c85bff3b3f0d409333f88fcbe5013, type: 3}
       propertyPath: m_Name
       value: GameManager

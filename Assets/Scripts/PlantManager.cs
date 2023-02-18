@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlantManager : MonoBehaviour
 {
     static GameObject plantPrefab;
+    [SerializeField] TMP_Text vineText;
     public static bool GameOver { get; set; }
     private void Awake()
     {
@@ -22,7 +25,7 @@ public class PlantManager : MonoBehaviour
             }
             VineGrowing.KillPlant();
         }
-        if (VineGrowing.IsDead && Input.GetMouseButtonDown(0) && !GameOver)
+        if (Input.GetMouseButtonDown(0) && !GameOver)
         {
             Vector2Int mousePosition = GridManager.GetGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             if (VineGrowing.ContainsNode(mousePosition))
@@ -35,6 +38,11 @@ public class PlantManager : MonoBehaviour
             }
                 
         }
-        print(FoodManager.Nutrients - VineGrowing.VineCount);
+        if (vineText == null) vineText = GameObject.FindGameObjectWithTag("VineText").GetComponent<TMP_Text>();
+        vineText.text = (FoodManager.Nutrients - VineGrowing.VineCount).ToString();
+        if (GameOver)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 }

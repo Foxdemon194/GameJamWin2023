@@ -83,8 +83,11 @@ public class VineGrowing : MonoBehaviour
                 vineStopped = true;
                 foreach (Vector2Int position in localVinePositions)
                 {
+                    vineGrid[position.x, position.y].GetComponent<SpriteRenderer>().material.SetFloat("_Burnt", 1);
+                    vineGrid[position.x, position.y].GetComponent<SpriteRenderer>().color = Color.red;
                     vinePositions.Remove(position);
                 }
+                
                 vinePositions.Remove(GridManager.GetGridPosition(transform.position));
                 return;
             }

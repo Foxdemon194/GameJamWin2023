@@ -22,6 +22,11 @@ public class SceneTransition : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
     public void Unpause()
     {
         Time.timeScale = 1;

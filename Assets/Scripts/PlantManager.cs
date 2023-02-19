@@ -16,6 +16,7 @@ public class PlantManager : MonoBehaviour
     }
     void Update()
     {
+        VineGrowing.isGrowing = false;
         if (FoodManager.Nutrients < VineGrowing.VineCount)
         {
             if (VineGrowing.NoNodes)

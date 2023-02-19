@@ -29,6 +29,7 @@ public class VineGrowing : MonoBehaviour
     bool newVineSpawned = false;
     int nextDirection = -1;
     static int totalVines = 0;
+    public static bool isGrowing = false;
     public static void KillPlant() => isDead = true;
     void Awake()
     {
@@ -123,6 +124,7 @@ public class VineGrowing : MonoBehaviour
             activeVineMaterial = vineGrid[activeVinePosition.x, activeVinePosition.y].GetComponent<Renderer>().material;
             activeVineMaterial.SetInt("_Clockwise", clockwise ? 1 : 0);
             VineSegment segment = vineGrid[activeVinePosition.x, activeVinePosition.y].GetComponent<VineSegment>();
+            isGrowing = true;
 
             segment.inputDirection = (currentDirection + 2) % 4;
             segment.vineType = vineType;
@@ -130,8 +132,9 @@ public class VineGrowing : MonoBehaviour
             
             elapsedTime = 0;
         }
-        else
+        else if (elapsedTime <= growTime)
         {
+            isGrowing = true;
             elapsedTime += Time.deltaTime;
             if (activeVineMaterial != null)
             {

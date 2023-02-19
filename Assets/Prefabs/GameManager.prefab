@@ -1438,7 +1438,7 @@ Transform:
   - {fileID: 3604402055798848212}
   - {fileID: 612493680}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3604402057088771335
 MonoBehaviour:
@@ -1466,7 +1466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winPanel: {fileID: 0}
-  nextScene: 
+  nextScene: Level2
   foodPrefab: {fileID: 2563082747783451102, guid: e822cdc7b6a4a404a96e3af53ad654ea, type: 3}
   diminishingFoodValue: 0.9
   baseNutrients: 10

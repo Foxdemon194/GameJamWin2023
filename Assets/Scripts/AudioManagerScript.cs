@@ -12,7 +12,7 @@ public class AudioManagerScript : MonoBehaviour
 
     private void Update()
     {
-        if(VineGrowing.isGrowing)
+        if (VineGrowing.isGrowing)
         {
             Play("Growing");
         }

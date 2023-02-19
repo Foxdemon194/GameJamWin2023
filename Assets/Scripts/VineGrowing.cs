@@ -55,11 +55,6 @@ public class VineGrowing : MonoBehaviour
             SpawnNewVine();
     }
 
-    private void LateUpdate()
-    {
-        isGrowing = false;
-    }
-
     private void GrowVine()
     {
         if (nextDirection == -1)

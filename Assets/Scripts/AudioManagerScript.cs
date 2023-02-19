@@ -18,13 +18,19 @@ public class AudioManagerScript : MonoBehaviour
         }
         else
         {
-            StopS("Growing");
+            //StopS("Growing");
 
         }
     }
 
+    private void Start()
+    {
+        Play("MainTheme");
+    }
+
     private void Awake()
     {
+
         if(instance == null)
         {
             instance = this;
@@ -47,7 +53,7 @@ public class AudioManagerScript : MonoBehaviour
         }
     }
 
-    public void Play(string name) //FindObjectOfType<AudioManager>().Play("audio's name");
+    public void Play(string name) //FindObjectOfType<AudioManagerScript>().Play("audio's name");
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if(s == null)
@@ -58,8 +64,8 @@ public class AudioManagerScript : MonoBehaviour
         s.source.Play();
 
     }
-
-    public void StopS(string sound)//FindObjectOfType<AudioManager>().StopS("audio's name")
+    
+    public void StopS(string sound)//FindObjectOfType<AudioManagerScript>().StopS("audio's name")
     {
         Sound s = Array.Find(sounds, item => item.name == sound);
         if (s == null)

@@ -7,41 +7,52 @@ public class SceneTransition : MonoBehaviour
 {
     [SerializeField] GameObject pauseMenu;
 
+    PauseMenuMan pauseMenuMan;
+
+
     public void LoadLevel1() //this loads the tutorial, not level 1
     {
         SceneManager.LoadScene("Tutorial");
+        Time.timeScale = 1;
     }
 
     public void LoadL1()
     {
         SceneManager.LoadScene("Level1");
+        Time.timeScale = 1;
     }
     public void LoadL2()
     {
         SceneManager.LoadScene("Level2");
+        Time.timeScale = 1;
     }
     public void LoadL3()
     {
         SceneManager.LoadScene("Level3");
+        Time.timeScale = 1;
     }
     public void LoadL4()
     {
         SceneManager.LoadScene("Level4");
+        Time.timeScale = 1;
     }
 
     public void LoadSettingsMenu()
     {
         SceneManager.LoadScene("SettingsScene");
+        Time.timeScale = 1;
     }
 
     public void ReloadLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1;
     }
 
     public void LoadMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1;
     }
 
     public void Unpause()

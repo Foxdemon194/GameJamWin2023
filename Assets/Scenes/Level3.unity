@@ -1690,6 +1690,10 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3604402057088771332, guid: 2e6c85bff3b3f0d409333f88fcbe5013, type: 3}
+      propertyPath: winPanel
+      value: 
+      objectReference: {fileID: 1829588671}
+    - target: {fileID: 3604402057088771332, guid: 2e6c85bff3b3f0d409333f88fcbe5013, type: 3}
       propertyPath: nextScene
       value: Level4
       objectReference: {fileID: 0}
@@ -5770,6 +5774,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87134940e01724445aaec573ae04d98a, type: 3}
+--- !u!1 &1829588671 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3203657601318579688, guid: 45e6f0327b3d7b749b91e700ee366a5f, type: 3}
+  m_PrefabInstance: {fileID: 1339011943}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1834036297
 PrefabInstance:
   m_ObjectHideFlags: 0

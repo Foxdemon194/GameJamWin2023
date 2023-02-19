@@ -74,9 +74,9 @@ public class VineGrowing : MonoBehaviour
             
             if (vineStopped) return;
             int currentDirection = nextDirection;
-            FoodManager.GetClosestFoodFromNeighbor(activeVinePosition, out nextDirection);
 
             Vector2Int newVinePosition = activeVinePosition + GridManager.directions[currentDirection];
+            FoodManager.GetClosestFoodFromNeighbor(newVinePosition, out nextDirection);
 
             if (poisonpositions.Contains(newVinePosition))
             {

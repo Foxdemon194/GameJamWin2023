@@ -138,7 +138,12 @@ public class FoodManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && canTimer > canCoolDown)
         {
             Vector2Int gridPosition = GridManager.GetGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            if (nutrientGrid[gridPosition.x, gridPosition.y] == null)
+            bool adjacentFood = false;
+            for (int i = 0; i < 4; i++)
+            {
+                adjacentFood = adjacentFood || nutrientGrid[(gridPosition + GridManager.directions[i]).x, (gridPosition + GridManager.directions[i]).y] != null;
+            }
+            if (nutrientGrid[gridPosition.x, gridPosition.y] == null && !adjacentFood)
             {
                 nutrientGrid[gridPosition.x, gridPosition.y] = Instantiate<Nutrient>(foodPrefab, GridManager.GetWorldPosition(gridPosition), Quaternion.identity);
                 nutrientPositions.Add(gridPosition);

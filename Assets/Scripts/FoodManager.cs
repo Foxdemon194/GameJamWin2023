@@ -20,7 +20,6 @@ public class FoodManager : MonoBehaviour
     [SerializeField] TMP_Text waterText;
     [SerializeField] TMP_Text lightText;
     [SerializeField] TMP_Text foodText;
-    [SerializeField] bool showObstacles;
     
     float canTimer = 99f;
     static int BaseNutrients { get => instance.baseNutrients; set => instance.baseNutrients = value; }
@@ -32,7 +31,6 @@ public class FoodManager : MonoBehaviour
     static int foodOccupied = 0;
     static int waterOccupied = 0;
     static int lightOccupied = 0;
-    static GameObject[] obstaclesList;
     public static void HandleDeath()
     {
         foodOccupied = 0; waterOccupied = 0; lightOccupied = 0; occupiedSpaces = 0;
@@ -115,7 +113,6 @@ public class FoodManager : MonoBehaviour
 
     void Awake() 
     {
-        obstaclesList = GameObject.FindGameObjectsWithTag("Rock"); 
         if (instance != null)
         {
             Destroy(gameObject);
@@ -223,15 +220,4 @@ public class FoodManager : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        if (showObstacles)
-        {
-            foreach (GameObject go in obstaclesList)
-            {
-                Gizmos.color = Color.red;
-                Gizmos.DrawCube(go.transform.position, new Vector3(1, 1, 1));
-            }
-        }
-    }
 }

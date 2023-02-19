@@ -1475,7 +1475,8 @@ MonoBehaviour:
     m_Bits: 72
   nutCount: {x: 0, y: 0, z: 0}
   canSprite: {fileID: 1392204187}
-  canCoolDown: 3
+  canCoolDown: 2
   waterText: {fileID: 81635521}
   lightText: {fileID: 1375732856}
   foodText: {fileID: 1945148084}
+  showObstacles: 0

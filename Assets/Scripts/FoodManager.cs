@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class FoodManager : MonoBehaviour
 {
+    [SerializeField] GameObject winPanel;
     [SerializeField] string nextScene;
     [SerializeField] Nutrient foodPrefab;
     [SerializeField] float diminishingFoodValue = 0.9f;
@@ -128,6 +129,8 @@ public class FoodManager : MonoBehaviour
         nutrientPositions = new List<Vector2Int>();
         InitializeNutrients();
         initialSpaces = nutrientPositions.Count;
+        if (winPanel == null)
+            winPanel = GameObject.FindGameObjectWithTag("WinPanel");
     }
 
     void Update()
@@ -151,7 +154,7 @@ public class FoodManager : MonoBehaviour
 
         if (occupiedSpaces >= initialSpaces)
         {
-            SceneManager.LoadScene(nextScene);
+            winPanel.SetActive(true);
         }
     }
 

@@ -1465,6 +1465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1299c8cb707b7d94bb3505bac98fbb00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  winPanel: {fileID: 0}
   nextScene: 
   foodPrefab: {fileID: 2563082747783451102, guid: e822cdc7b6a4a404a96e3af53ad654ea, type: 3}
   diminishingFoodValue: 0.9
@@ -1475,8 +1476,7 @@ MonoBehaviour:
     m_Bits: 72
   nutCount: {x: 0, y: 0, z: 0}
   canSprite: {fileID: 1392204187}
-  canCoolDown: 2
+  canCoolDown: 1
   waterText: {fileID: 81635521}
   lightText: {fileID: 1375732856}
   foodText: {fileID: 1945148084}
-  showObstacles: 0

@@ -2572,6 +2572,10 @@ PrefabInstance:
       value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 3604402057088771332, guid: 2e6c85bff3b3f0d409333f88fcbe5013, type: 3}
+      propertyPath: winPanel
+      value: 
+      objectReference: {fileID: 3295719254882474210}
+    - target: {fileID: 3604402057088771332, guid: 2e6c85bff3b3f0d409333f88fcbe5013, type: 3}
       propertyPath: nextScene
       value: Level2
       objectReference: {fileID: 0}
@@ -12414,3 +12418,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 316027bf6a1db7b4aa8cb13dc75b3464, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3295719254882474210 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3203657601318579688, guid: 45e6f0327b3d7b749b91e700ee366a5f, type: 3}
+  m_PrefabInstance: {fileID: 3295719254882474208}
+  m_PrefabAsset: {fileID: 0}

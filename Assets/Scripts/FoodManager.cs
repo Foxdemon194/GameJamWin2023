@@ -106,7 +106,6 @@ public class FoodManager : MonoBehaviour
                 lightOccupied += amount;
                 break;
         }
-        print(occupiedSpaces + " / " + initialSpaces);
     }
     static LayerMask Obstacles => instance.obstacles;
 

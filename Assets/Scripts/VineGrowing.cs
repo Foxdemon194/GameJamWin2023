@@ -159,7 +159,7 @@ public class VineGrowing : MonoBehaviour
                 selectedDirection = directionIndex;
             }
         }
-        if (!found) return;
+        if (!found || selectedDirection == -1) return;
         Instantiate(vineGrowerPrefab, GridManager.GetWorldPosition(selectedSegment), Quaternion.identity).transform.parent = transform.parent;
         vineGrid[selectedSegment.x, selectedSegment.y].GetComponent<VineSegment>().ExtendVine(selectedDirection, out GameObject newSegment);
         if (newSegment != null) vineGrid[selectedSegment.x, selectedSegment.y] = newSegment;

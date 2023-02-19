@@ -62,7 +62,7 @@ MonoBehaviour:
     m_Value: 0
   contrast:
     m_OverrideState: 1
-    m_Value: 50
+    m_Value: 100
   colorFilter:
     m_OverrideState: 0
     m_Value: {r: 0.3962264, g: 0.3962264, b: 0.3962264, a: 1}
@@ -71,7 +71,7 @@ MonoBehaviour:
     m_Value: 0
   saturation:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 0
 --- !u!114 &4301900118661145297
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -90,7 +90,7 @@ MonoBehaviour:
     m_Value: {x: 1, y: 1, z: 1, w: 0}
   gamma:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1, z: 1, w: 0.13539651}
+    m_Value: {x: 1, y: 1, z: 1, w: -0.06500432}
   gain:
     m_OverrideState: 1
     m_Value: {x: 1, y: 1, z: 1, w: 0.25145063}

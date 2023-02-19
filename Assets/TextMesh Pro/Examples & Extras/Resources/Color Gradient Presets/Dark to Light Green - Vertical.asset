@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dark to Light Green - Vertical
   m_EditorClassIdentifier: 
   colorMode: 3
-  topLeft: {r: 0, g: 0.66176474, b: 0, a: 1}
+  topLeft: {r: 1, g: 1, b: 1, a: 1}
   topRight: {r: 0, g: 0.5735294, b: 0.0022491007, a: 1}
   bottomLeft: {r: 0.5254902, g: 1, b: 0.4901961, a: 1}
   bottomRight: {r: 0.422, g: 0.9921569, b: 0.374, a: 1}

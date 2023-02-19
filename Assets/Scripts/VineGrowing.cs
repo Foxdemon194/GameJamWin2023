@@ -9,7 +9,10 @@ public class VineGrowing : MonoBehaviour
     [SerializeField] GameObject vineLPrefab;
     [SerializeField] GameObject nodePrefab;
     [SerializeField] float growTime = 0.25f;
-    
+
+    public static bool isGrowing = false;
+
+
     GameObject vineGrowerPrefab;
     Vector2Int activeVinePosition;
     Material activeVineMaterial;
@@ -29,7 +32,6 @@ public class VineGrowing : MonoBehaviour
     bool newVineSpawned = false;
     int nextDirection = -1;
     static int totalVines = 0;
-    public static bool isGrowing = false;
     public static void KillPlant() => isDead = true;
     void Awake()
     {
@@ -44,10 +46,18 @@ public class VineGrowing : MonoBehaviour
     
     void Update()
     {
-        if(!vineStopped && !isDead)
+        if (!vineStopped && !isDead)
+        {
             GrowVine();
+            isGrowing = true;
+        }
         else if (!newVineSpawned && !isDead)
             SpawnNewVine();
+    }
+
+    private void LateUpdate()
+    {
+        isGrowing = false;
     }
 
     private void GrowVine()

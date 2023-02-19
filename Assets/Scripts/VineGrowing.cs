@@ -10,7 +10,7 @@ public class VineGrowing : MonoBehaviour
     [SerializeField] GameObject nodePrefab;
     [SerializeField] float growTime = 0.25f;
 
-    public static bool isGrowing;
+    public static bool isGrowing = false;
 
 
     GameObject vineGrowerPrefab;
@@ -32,7 +32,6 @@ public class VineGrowing : MonoBehaviour
     bool newVineSpawned = false;
     int nextDirection = -1;
     static int totalVines = 0;
-    public static bool isGrowing = false;
     public static void KillPlant() => isDead = true;
     void Awake()
     {
